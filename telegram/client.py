@@ -33,7 +33,7 @@ class TelegramBot:
                     caption=self._format_program(program),
                     parse_mode="HTML",
                 )
-            finally:
+            except:
                 ...
         else:
             await self.bot.send_message(
@@ -47,7 +47,7 @@ class TelegramBot:
                     text=self._format_program(program),
                     parse_mode="HTML",
                 )
-            finally:
+            except:
                 ...
 
     def _format_program(self, program: Program) -> str:
