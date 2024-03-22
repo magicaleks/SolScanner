@@ -150,6 +150,8 @@ class Scanner:
                             print(res["error"])
                     finally:
                         resp.close()
+                        if not res.get("result"):
+                            print(res)
                         return res
 
             except Exception as e:
