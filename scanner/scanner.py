@@ -3,6 +3,7 @@ from asyncio import Queue, Semaphore
 from time import time
 from traceback import print_exception
 from typing import Any
+from webdriver_manager.chrome import ChromeDriverManager
 
 import httpx
 from aiohttp import ClientSession, TCPConnector
@@ -182,9 +183,10 @@ class Scanner:
         kwargs = {"title": "token unnamed", "address": address, "link": link, "cap": 0, "liq": 0}
 
         options = webdriver.ChromeOptions()
-        options.add_argument('headless')
+        options.add_argument('--headless')
         options.add_argument('--no-sandbox')
-        driver = webdriver.Chrome(options, ChromeService())
+        options.add_argument('--disable-dev-shm-usage')
+        driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
 
         driver.get(link)
 
