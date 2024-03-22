@@ -121,7 +121,7 @@ class Scanner:
                     except Exception as e:
                         print_exception(type(e), e, e.__traceback__)
 
-            await asyncio.sleep(20)
+            await asyncio.sleep(10)
             latest = blocks[-1]
 
     async def _realtime_chain_parse(self, slot: int, proxy: str) -> dict[str, Any]:
@@ -143,11 +143,9 @@ class Scanner:
                         self.request_id += 1
                         res = await resp.json()
                         if res.get("error"):
-                            if res["error"]["code"] == 429:
-                                resp.close()
-                                await asyncio.sleep(10)
-                                continue
-                            print(res["error"])
+                            resp.close()
+                            await asyncio.sleep(10)
+                            continue
                     finally:
                         resp.close()
                         if not res.get("result"):
