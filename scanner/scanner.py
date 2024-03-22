@@ -74,6 +74,11 @@ class Scanner:
                             if not program in self._last_deploys:
                                 res.append(program)
                                 self._last_deploys.append(program)
+                except IndexError:
+                    program = accounts[_ac[0]]
+                    if not program in self._last_deploys:
+                        res.append(program)
+                        self._last_deploys.append(program)
                 finally:
                     continue
         return res
