@@ -146,9 +146,11 @@ class Scanner:
                         res["result"]
                     except:
                         resp.close()
+                        await session.close()
                         await asyncio.sleep(10)
                     else:
                         resp.close()
+                        await session.close()
                         return res
 
             except Exception as e:
