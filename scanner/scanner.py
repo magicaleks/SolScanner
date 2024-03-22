@@ -164,16 +164,16 @@ class Scanner:
 
         for d in bs.find_all("div", attrs={"class": "variable-row"}):
             d: Tag
-            if "name" in d.get_text():
+            if d.get_text().startswith("\"name"):
                 kwargs["title"] = d.find("span", attrs={"class": "string-value"}).text.strip("\"")
             
-            elif "symbol" in d.get_text():
+            elif d.get_text().startswith("\"symbol"):
                 kwargs["symbol"] = d.find("span", attrs={"class": "string-value"}).text.strip("\"")
             
-            elif "description" in d.get_text():
+            elif d.get_text().startswith("\"description"):
                 kwargs["description"] = d.find("span", attrs={"class": "string-value"}).text.strip("\"")
 
-            elif "image" in d.get_text():
+            elif d.get_text().startswith("\"image"):
                 kwargs["icon"] = d.find("span", attrs={"class": "string-value"}).text.strip("\"")
 
         img = bs.find("img", attrs={"width": "30px", "height": "auto"})
