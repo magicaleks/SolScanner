@@ -140,13 +140,14 @@ class Scanner:
                     )
                     self.request_id += 1
                     res = await resp.json()
-                    resp.close()
                     if res.get("error"):
                         if res["error"]["code"] == 429:
+                            resp.close()
                             await asyncio.sleep(10)
                             continue
                         print(res["error"])
 
+                    resp.close()
                     return res
 
             except Exception as e:
