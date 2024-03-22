@@ -7,7 +7,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 
 import httpx
 from aiohttp import ClientSession, TCPConnector
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Tag
 from solana.rpc.async_api import AsyncClient
 from solders.keypair import Keypair
 from selenium import webdriver
@@ -74,11 +74,6 @@ class Scanner:
                             if not program in self._last_deploys:
                                 res.append(program)
                                 self._last_deploys.append(program)
-                except IndexError:
-                    program = accounts[_ac[0]]
-                    if not program in self._last_deploys:
-                        res.append(program)
-                        self._last_deploys.append(program)
                 finally:
                     continue
         return res
@@ -161,15 +156,16 @@ class Scanner:
         options.add_argument('--disable-dev-shm-usage')
         driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
 
-        driver.get(link)
+        driver.get(link+"#metadata")
 
         await asyncio.sleep(13)
 
         bs = BeautifulSoup(driver.page_source, features="html.parser")
 
-        title = bs.find("title")
-        if title:
-            kwargs["title"] = title.get_text().split("|")[0].strip(" ")
+        for d in bs.find_all("div", attrs={"class": "variable-row"}):
+            d: Tag
+            if "name" in d.get_text():
+                kwargs["title"] = d.find("span", attrs={"class": "string-value"}).text.strip("\"")
 
         img = bs.find("img", attrs={"width": "30px", "height": "auto"})
         if img:
