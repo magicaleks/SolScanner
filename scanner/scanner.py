@@ -143,11 +143,11 @@ class Scanner:
                     try:
                         self.request_id += 1
                         res = await resp.json()
-                        if not res.get("result"):
-                            resp.close()
-                            await asyncio.sleep(10)
-                            continue
-                    finally:
+                        res["result"]
+                    except:
+                        resp.close()
+                        await asyncio.sleep(10)
+                    else:
                         resp.close()
                         return res
 
