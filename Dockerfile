@@ -5,6 +5,6 @@ WORKDIR /app/
 
 RUN pip install -r requirements.txt
 
-ENV PYTHONPATH=/
+ENV PYTHONPATH="/app"
 
 CMD [ "python", "apps/app.py" ]
