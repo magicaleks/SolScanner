@@ -113,7 +113,6 @@ class Scanner:
     async def _waiter(self, task):
         while not task.done():
             await asyncio.sleep(1)
-        print(f"Done {task.get_name()}")
         await self._scan_block(task.result())
 
     async def realtime_chain_parse(self) -> None:
