@@ -175,7 +175,7 @@ class Scanner:
                         res = await resp.json()
                         if res.get("error"):
                             if res["error"]["code"] == 429:
-                                await asyncio.sleep(2)
+                                await asyncio.sleep(10)
                                 continue
                             print(res["error"])
                         else:
