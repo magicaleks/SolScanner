@@ -110,17 +110,16 @@ class Scanner:
                     await asyncio.sleep(1)
 
             amount = len(blocks) // len(proxies) if len(blocks) > len(proxies) else len(blocks)
-            for c, p in enumerate(proxies):
-                for slot in blocks[amount*c:amount*(c+1)]:
-                    try:
-                        task = self._loop.create_task(
-                            self._realtime_chain_parse(slot, p)
-                        )
-                        self._loop.create_task(
-                            self._waiter(task)
-                        )
-                    except Exception as e:
-                        print_exception(type(e), e, e.__traceback__)
+            for i in range(len(blocks)):
+                try:
+                    task = self._loop.create_task(
+                        self._realtime_chain_parse(blocks[i], i % len(proxies))
+                    )
+                    self._loop.create_task(
+                        self._waiter(task)
+                    )
+                except Exception as e:
+                    print_exception(type(e), e, e.__traceback__)
 
             await asyncio.sleep(30)
             latest = blocks[-1]
