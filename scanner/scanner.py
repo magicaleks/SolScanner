@@ -137,7 +137,7 @@ class Scanner:
                     await asyncio.sleep(1)
 
             print(len(blocks), blocks[-1])
-            print("Tasks "+str(len(self._tasks)))
+            print("Tasks "+str(self._tasks))
             t = time()
             amount = len(blocks) // len(proxies) if len(blocks) > len(proxies) else len(blocks)
             for c, p in enumerate(proxies):
