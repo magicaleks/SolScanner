@@ -173,12 +173,12 @@ class Scanner:
             elif "description" in d.get_text():
                 kwargs["description"] = d.find("span", attrs={"class": "string-value"}).text.strip("\"")
 
-            elif "image" in d.get_text():
-                kwargs["icon"] = d.find("span", attrs={"class": "string-value"}).text.strip("\"")
+            # elif "image" in d.get_text():
+            #     kwargs["icon"] = d.find("span", attrs={"class": "string-value"}).text.strip("\"")
 
-        # img = bs.find("img", attrs={"width": "30px", "height": "auto"})
-        # if img:
-        #     kwargs["icon"] = img.attrs["src"]
+        img = bs.find("img", attrs={"width": "30px", "height": "auto"})
+        if img:
+            kwargs["icon"] = img.attrs["src"]
 
         await self.telegram.send(Program(**kwargs))
         driver.close()
