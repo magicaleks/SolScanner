@@ -100,6 +100,7 @@ class Scanner:
         latest = (await self.impl_client.get_slot())["result"]
         self._tasks = 0
         while self._running:
+            print("CHECKPOINT!")
             blocks = []
             while not blocks:
                 try:
