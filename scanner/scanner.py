@@ -46,37 +46,6 @@ class Scanner:
     def add_filter(self, _filter: Filter) -> None:
         self.filters.append(_filter)
 
-    async def scan(self) -> None:
-        # self._latest = (await self.impl_client.get_slot())["result"]
-        while False:
-
-            block = await self._blocks.get()
-            # self.blocks_processed = 0
-
-            # prd = len(blocks.value) // 3
-
-            # self._loop.create_task(self._sub_scan(blocks.value[:prd]))
-            # self._loop.create_task(self._sub_scan(blocks.value[prd:prd*2]))
-            # self._loop.create_task(self._sub_scan(blocks.value[prd*2:]))
-
-            # for slot in blocks.value:
-            #
-
-            self._loop.create_task(self._scan_block(block))
-
-            # await asyncio.sleep(1)
-
-            # await self._semaphore.acquire()
-            # print(f"diff {len(blocks.value)-self.blocks_processed}")
-            # if blocks.value:
-            #     self._latest = blocks.value[-1]
-
-    # async def _sub_scan(self, blocks) -> None:
-    #     await self._semaphore.acquire()
-    #     for slot in blocks:
-    #         await self._scan_block(slot)
-    #     self._semaphore.release()
-
     async def _scan_block(self, block: dict[str, Any]) -> None:
         if not block:
             return
@@ -90,7 +59,6 @@ class Scanner:
 
     def search_for_deploys(self, block: dict[str, Any]) -> list[str]:
         res = []
-        # print(block["result"]["parentSlot"])
         for tr in block["result"]["transactions"]:
             tr = tr["transaction"]
             accounts = tr["message"]["accountKeys"]
@@ -134,9 +102,6 @@ class Scanner:
                 except Exception as e:
                     await asyncio.sleep(1)
 
-            print(len(blocks), blocks[-1])
-            print("Tasks "+str(self._tasks))
-            t = time()
             amount = len(blocks) // len(proxies) if len(blocks) > len(proxies) else len(blocks)
             for c, p in enumerate(proxies):
                 for slot in blocks[amount*c:amount*(c+1)]:
@@ -149,7 +114,6 @@ class Scanner:
                         )
                     except Exception as e:
                         print_exception(type(e), e, e.__traceback__)
-                    # await asyncio.sleep(0.1)
 
             await asyncio.sleep(20)
             latest = blocks[-1]
@@ -184,7 +148,6 @@ class Scanner:
 
     async def parse_program(self, address: str) -> Program:
         link = f"https://solscan.io/token/{address}"
-        # html = httpx.get(link)
 
         kwargs = {"title": "token unnamed", "address": address, "link": link, "cap": 0, "liq": 0}
 
@@ -215,8 +178,6 @@ class Scanner:
         try:
             self._loop = asyncio.new_event_loop()
             self._loop.create_task(self.realtime_chain_parse())
-            self._loop.create_task(self.scan())
-            # self._loop.create_task(self.parse_program("8ivhyrs36K82Mko4oPQxUCZiSDxv4Rwb5AAr1pDFKpQp"))
             self._loop.run_forever()
         except Exception as e:
             print_exception(type(e), e, e.__traceback__)
