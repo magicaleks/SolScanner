@@ -123,7 +123,6 @@ class Scanner:
             "http://3u3Dgb:pS6aB2@45.148.246.61:8000",
             "http://xVxT79:7T2HEV@91.198.215.75:8000",
             "http://xVxT79:7T2HEV@91.198.215.196:8000",
-            "",
         ]
         latest = (await self.impl_client.get_slot())["result"]
         self._tasks = 0
