@@ -125,10 +125,11 @@ class Scanner:
             "",
         ]
         latest = (await self.impl_client.get_slot())["result"]
+        tasks = []
         while self._running:
             blocks = (await self.client.get_blocks(start_slot=latest)).value
             print(len(blocks), blocks[-1])
-            print("Processed "+str(self.processed))
+            print("Tasks "+str(len(tasks)))
             t = time()
             amount = len(blocks) // len(proxies) if len(blocks) > len(proxies) else len(blocks)
             for c, p in enumerate(proxies):
@@ -137,9 +138,9 @@ class Scanner:
                         task = self._loop.create_task(
                             self._realtime_chain_parse(slot, p)
                         )
-                        self._loop.create_task(
+                        tasks.append(self._loop.create_task(
                             self._waiter(task)
-                        )
+                        ))
                     except Exception as e:
                         print_exception(type(e), e, e.__traceback__)
                     # await asyncio.sleep(0.1)
