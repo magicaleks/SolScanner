@@ -126,9 +126,9 @@ class Scanner:
             latest = blocks[-1]
 
     async def _realtime_chain_parse(self, slot: int, proxy: str) -> dict[str, Any]:
-        while self._running:
-            try:
-                async with ClientSession(connector=TCPConnector(verify_ssl=False), skip_auto_headers=["X-Forwarded-For", "Referer"]) as session:
+        async with ClientSession(connector=TCPConnector(verify_ssl=False), skip_auto_headers=["X-Forwarded-For", "Referer"]) as session:
+            while self._running:
+                try:
                     resp = await session.post(
                         url=self._API_ENDPOINT,
                         headers={"content-type": "application/json"},
@@ -149,12 +149,10 @@ class Scanner:
                         await session.close()
                         await asyncio.sleep(10)
                     else:
-                        resp.close()
-                        await session.close()
                         return res
 
-            except Exception as e:
-                print_exception(type(e), e, e.__traceback__)
+                except Exception as e:
+                    print_exception(type(e), e, e.__traceback__)
 
     async def parse_program(self, address: str) -> Program:
         link = f"https://solscan.io/token/{address}"
