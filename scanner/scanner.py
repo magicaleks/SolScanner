@@ -132,7 +132,6 @@ class Scanner:
                 try:
                     blocks = (await self.client.get_blocks(start_slot=latest)).value
                 except Exception as e:
-                    print_exception(type(e), e, e.__traceback__)
                     await asyncio.sleep(1)
 
             print(len(blocks), blocks[-1])
