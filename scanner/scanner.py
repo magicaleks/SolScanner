@@ -139,17 +139,18 @@ class Scanner:
                         },
                         proxy=proxy if proxy else None,
                     )
-                    self.request_id += 1
-                    res = await resp.json()
-                    if res.get("error"):
-                        if res["error"]["code"] == 429:
-                            resp.close()
-                            await asyncio.sleep(10)
-                            continue
-                        print(res["error"])
-
-                    resp.close()
-                    return res
+                    try:
+                        self.request_id += 1
+                        res = await resp.json()
+                        if res.get("error"):
+                            if res["error"]["code"] == 429:
+                                resp.close()
+                                await asyncio.sleep(10)
+                                continue
+                            print(res["error"])
+                    finally:
+                        resp.close()
+                        return res
 
             except Exception as e:
                 print_exception(type(e), e, e.__traceback__)
