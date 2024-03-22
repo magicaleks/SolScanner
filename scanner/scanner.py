@@ -82,6 +82,7 @@ class Scanner:
             return
         try:
             res = self.search_for_deploys(block)
+            print(f"Res {res}")
             for address in res:
                 await self.parse_program(address)
         except Exception as e:
@@ -89,7 +90,6 @@ class Scanner:
 
     def search_for_deploys(self, block: dict[str, Any]) -> list[str]:
         res = []
-        self.processed += 1
         # print(block["result"]["parentSlot"])
         for tr in block["result"]["transactions"]:
             tr = tr["transaction"]
@@ -111,9 +111,9 @@ class Scanner:
         return res
     
     async def _waiter(self, task):
+        self._tasks += 1
         while not task.done():
             await asyncio.sleep(1)
-        self._tasks += 1
         await self._scan_block(task.result())
         self._tasks -= 1
 
