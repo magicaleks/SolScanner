@@ -121,7 +121,7 @@ class Scanner:
                 except Exception as e:
                     print_exception(type(e), e, e.__traceback__)
 
-            await asyncio.sleep(30)
+            await asyncio.sleep(10)
             latest = blocks[-1]
 
     async def _realtime_chain_parse(self, slot: int, proxy: str) -> dict[str, Any]:
