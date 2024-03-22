@@ -57,12 +57,12 @@ class TelegramBot:
         else:
             text = f"<b>Coin:</b> <code>{program.title}</code> | <a href=\"{program.link}\">Solscan.io</a>\n"
         
-        text += f"<b>Address:</b> <code>{program.address}</code>"
+        text += f"<b>Address:</b> <code>{program.address}</code>\n"
 
         if program.symbol:
-            text += f"<b>Symbol:</b> <code>{program.symbol}</code>"
+            text += f"<b>Symbol:</b> <code>{program.symbol}</code>\n"
 
         if program.description:
-            text += f"<b>Symbol:</b> <code>{program.description}</code>"
+            text += f"<b>Sescription:</b> <code>{program.description}</code>\n"
 
         return text
