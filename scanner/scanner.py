@@ -166,6 +166,12 @@ class Scanner:
             d: Tag
             if "name" in d.get_text():
                 kwargs["title"] = d.find("span", attrs={"class": "string-value"}).text.strip("\"")
+            
+            elif "symbol" in d.get_text():
+                kwargs["symbol"] = d.find("span", attrs={"class": "string-value"}).text.strip("\"")
+            
+            elif "description" in d.get_text():
+                kwargs["description"] = d.find("span", attrs={"class": "string-value"}).text.strip("\"")
 
         img = bs.find("img", attrs={"width": "30px", "height": "auto"})
         if img:

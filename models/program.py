@@ -28,6 +28,8 @@ class Program(BaseModel):
     liq: float
     link: str
     icon: Optional[str] = ""
+    description: Optional[str] = ""
+    symbol: Optional[str] = ""
     developer: Optional[str] = ""
     twitter: Optional[ProgramTwitterData] = None
     telegram: Optional[ProgramTelegramData] = None

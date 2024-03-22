@@ -58,4 +58,11 @@ class TelegramBot:
             text = f"<b>Coin:</b> <code>{program.title}</code> | <a href=\"{program.link}\">Solscan.io</a>\n"
         
         text += f"<b>Address:</b> <code>{program.address}</code>"
+
+        if program.symbol:
+            text += f"<b>Symbol:</b> <code>{program.symbol}</code>"
+
+        if program.description:
+            text += f"<b>Symbol:</b> <code>{program.description}</code>"
+
         return text
