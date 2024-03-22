@@ -96,6 +96,7 @@ class Scanner:
             "http://3u3Dgb:pS6aB2@45.148.246.61:8000",
             "http://xVxT79:7T2HEV@91.198.215.75:8000",
             "http://xVxT79:7T2HEV@91.198.215.196:8000",
+            ""
         ]
         latest = (await self.impl_client.get_slot())["result"]
         self._tasks = 0
@@ -121,7 +122,7 @@ class Scanner:
                     except Exception as e:
                         print_exception(type(e), e, e.__traceback__)
 
-            await asyncio.sleep(20)
+            await asyncio.sleep(25)
             latest = blocks[-1]
 
     async def _realtime_chain_parse(self, slot: int, proxy: str) -> dict[str, Any]:
