@@ -181,7 +181,9 @@ class Scanner:
 
         kwargs = {"title": "token unnamed", "address": address, "link": link, "cap": 0, "liq": 0}
 
-        driver = webdriver.Chrome(service=ChromeService())
+        options = webdriver.ChromeOptions()
+        options.add_argument('headless')
+        driver = webdriver.Chrome(options, ChromeService())
 
         driver.get(link)
 
