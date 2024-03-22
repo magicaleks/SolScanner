@@ -181,7 +181,7 @@ class Scanner:
                         else:
                             # await self._blocks.put(res)
                             return res
-                        return dict[str, Any]
+                        return res
 
             except Exception as e:
                 print_exception(type(e), e, e.__traceback__)
