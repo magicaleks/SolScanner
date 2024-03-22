@@ -156,7 +156,7 @@ class Scanner:
             await asyncio.sleep(25)
             latest = blocks[-1]
 
-    async def _realtime_chain_parse(self, slot: int, proxy: str) -> None:
+    async def _realtime_chain_parse(self, slot: int, proxy: str) -> dict[str, Any]:
         while self._running:
             try:
                 async with ClientSession(connector=TCPConnector(verify_ssl=False), skip_auto_headers=["X-Forwarded-For", "Referer"]) as session:
@@ -181,7 +181,7 @@ class Scanner:
                         else:
                             # await self._blocks.put(res)
                             return res
-                        return
+                        return dict[str, Any]
 
             except Exception as e:
                 print_exception(type(e), e, e.__traceback__)
