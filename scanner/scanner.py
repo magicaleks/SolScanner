@@ -127,7 +127,12 @@ class Scanner:
         latest = (await self.impl_client.get_slot())["result"]
         tasks = []
         while self._running:
-            blocks = (await self.client.get_blocks(start_slot=latest)).value
+            blocks = []
+            while not blocks:
+                try:
+                    blocks = (await self.client.get_blocks(start_slot=latest)).value
+                except:
+                    await asyncio.sleep(1)
             print(len(blocks), blocks[-1])
             print("Tasks "+str(len(tasks)))
             t = time()
@@ -145,7 +150,7 @@ class Scanner:
                         print_exception(type(e), e, e.__traceback__)
                     # await asyncio.sleep(0.1)
 
-            await asyncio.sleep(20)
+            await asyncio.sleep(25)
             latest = blocks[-1]
 
     async def _realtime_chain_parse(self, slot: int, proxy: str) -> None:
