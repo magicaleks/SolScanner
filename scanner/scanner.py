@@ -126,31 +126,29 @@ class Scanner:
 
     async def _realtime_chain_parse(self, slot: int, proxy: str) -> dict[str, Any]:
         async with ClientSession(connector=TCPConnector(verify_ssl=False), skip_auto_headers=["X-Forwarded-For", "Referer"]) as session:
-            while self._running:
+            try:
+                resp = await session.post(
+                    url=self._API_ENDPOINT,
+                    headers={"content-type": "application/json"},
+                    json={
+                        "jsonrpc": "2.0",
+                        "id": self.request_id,
+                        "method": "getBlock",
+                        "params": [slot, {"maxSupportedTransactionVersion": 0}],
+                    },
+                    proxy=proxy if proxy else None,
+                )
                 try:
-                    resp = await session.post(
-                        url=self._API_ENDPOINT,
-                        headers={"content-type": "application/json"},
-                        json={
-                            "jsonrpc": "2.0",
-                            "id": self.request_id,
-                            "method": "getBlock",
-                            "params": [slot, {"maxSupportedTransactionVersion": 0}],
-                        },
-                        proxy=proxy if proxy else None,
-                    )
-                    try:
-                        self.request_id += 1
-                        res = await resp.json()
-                        res["result"]
-                    except:
-                        resp.close()
-                        await asyncio.sleep(1)
-                    else:
-                        return res
+                    self.request_id += 1
+                    res = await resp.json()
+                    res["result"]
+                except:
+                    resp.close()
+                else:
+                    return res
 
-                except Exception as e:
-                    print_exception(type(e), e, e.__traceback__)
+            except Exception as e:
+                print_exception(type(e), e, e.__traceback__)
 
     async def parse_program(self, address: str) -> Program:
         link = f"https://solscan.io/token/{address}"
