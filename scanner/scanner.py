@@ -178,9 +178,7 @@ class Scanner:
                                 await asyncio.sleep(10)
                                 continue
                             print(res["error"])
-                        else:
-                            # await self._blocks.put(res)
-                            return res
+
                         return res
 
             except Exception as e:
