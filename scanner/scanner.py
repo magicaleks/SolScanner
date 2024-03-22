@@ -127,7 +127,7 @@ class Scanner:
         while self._running:
             try:
                 async with ClientSession(connector=TCPConnector(verify_ssl=False), skip_auto_headers=["X-Forwarded-For", "Referer"]) as session:
-                    async with session.post(
+                    resp = await session.post(
                         url=self._API_ENDPOINT,
                         headers={"content-type": "application/json"},
                         json={
@@ -137,16 +137,17 @@ class Scanner:
                             "params": [slot, {"maxSupportedTransactionVersion": 0}],
                         },
                         proxy=proxy if proxy else None,
-                    ) as resp:
-                        self.request_id += 1
-                        res = await resp.json()
-                        if res.get("error"):
-                            if res["error"]["code"] == 429:
-                                await asyncio.sleep(10)
-                                continue
-                            print(res["error"])
+                    )
+                    self.request_id += 1
+                    res = await resp.json()
+                    resp.close()
+                    if res.get("error"):
+                        if res["error"]["code"] == 429:
+                            await asyncio.sleep(10)
+                            continue
+                        print(res["error"])
 
-                        return res
+                    return res
 
             except Exception as e:
                 print_exception(type(e), e, e.__traceback__)
