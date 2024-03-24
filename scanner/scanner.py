@@ -239,7 +239,7 @@ class Scanner:
                 text += " | "
             text += f"<b>{d.getText()}</b>"
 
-        await self.telegram.send(text)
+        await self.telegram.send(text, kwargs["icon"] if kwargs.get("icon") else None)
         driver.close()
 
     def run(self) -> None:
