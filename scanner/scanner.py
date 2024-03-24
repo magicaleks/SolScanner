@@ -5,7 +5,6 @@ from traceback import print_exception
 from typing import Any
 from webdriver_manager.chrome import ChromeDriverManager
 
-import httpx
 from aiohttp import ClientSession, TCPConnector
 from bs4 import BeautifulSoup, Tag
 from solana.rpc.async_api import AsyncClient
