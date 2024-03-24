@@ -146,21 +146,23 @@ class Scanner:
                 print_exception(type(e), e, e.__traceback__)
 
     async def parse_program(self, address: str) -> Program:
-        link = f"https://solscan.io/token/{address}"
+        solscan_link = f"https://solscan.io/token/{address}"
 
-        kwargs = {"title": "token unnamed", "address": address, "link": link, "cap": 0, "liq": 0}
+        kwargs = {"title": "unnamed token"}
 
         options = webdriver.ChromeOptions()
         options.add_argument('--headless')
         options.add_argument('--no-sandbox')
         options.add_argument('--disable-dev-shm-usage')
         driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
-
-        driver.get(link+"#metadata")
+  
+        driver.get(solscan_link+"#metadata")
 
         await asyncio.sleep(13)
 
         bs = BeautifulSoup(driver.page_source, features="html.parser")
+
+        text = f"<a href=\"{solscan_link}\">Solscan.io</a> check:\n"
 
         for d in bs.find_all("div", attrs={"class": "variable-row"}):
             d: Tag
@@ -180,7 +182,64 @@ class Scanner:
         if img:
             kwargs["icon"] = img.attrs["src"]
 
-        await self.telegram.send(Program(**kwargs))
+        for d in bs.find_all("div", attrs={"class": "ant-row"}):
+            d: Tag
+            if d.get_text().startswith("Price"):
+                kwargs["price"] = d.children[1].get_text()
+
+            if d.get_text().startswith("Market Cap"):
+                kwargs["cap"] = d.children[1].get_text()
+
+            if d.get_text().startswith("Current Supply"):
+                kwargs["supply"] = d.children[1].get_text()
+
+            if d.get_text().startswith("Website"):
+                kwargs["website"] = d.children[1].get_text()
+
+        text += f"<b>Coin:</b> <i>{kwargs['title']}</i>\n"
+        text += f"<b>Address:</b> <code>{address}</code>\n"
+        if kwargs.get("symbol"):
+            text += f"<b>Symbol:</b> <code>{kwargs['symbol']}</code>\n"
+        if kwargs.get("description"):
+            text += f"<b>Description:</b> {kwargs['description']}\n"
+
+        if kwargs.get("price"):
+            text += f"<b>Price:</b> <code>{kwargs['price']}</code>\n"
+
+        if kwargs.get("cap"):
+            text += f"<b>Market cap:</b> <code>{kwargs['cap']}</code>\n"
+
+        if kwargs.get("supply"):
+            text += f"<b>Current Supply:</b> <code>{kwargs['currentSupply']}</code>\n"
+
+        if kwargs.get("website"):
+            text += f"<b>Website:</b> <code>{kwargs['website']}</code>\n"
+
+        text += "\n\n"
+        rugcheck_link = f"https://rugcheck.xyz/tokens/{address}"
+
+        kwargs = {"title": "unnamed token"}
+
+        driver.get(rugcheck_link)
+
+        await asyncio.sleep(13)
+
+        bs = BeautifulSoup(driver.page_source, features="html.parser")
+
+        text = f"<a href=\"{solscan_link}\">Rugcheck.io</a> check:\n"
+
+        main_d = bs.find("div", attrs={"class": "card-body"})
+        total = main_d.find("h1")
+
+        text += f"<b>Total check:</b> {total.getText()}\n\n"
+
+        row = main_d.find("div", attrs={"class": "row"})
+        for c, d in enumerate(row.find_all("div")):
+            if c > 0:
+                text += " | "
+            text += f"<b>{d.getText()}</b>"
+
+        await self.telegram.send(text)
         driver.close()
 
     def run(self) -> None:

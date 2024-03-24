@@ -6,3 +6,4 @@ selenium==4.18.1
 solana
 solathon
 solders
+webdriver-manager

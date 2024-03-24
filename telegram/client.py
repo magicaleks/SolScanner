@@ -18,37 +18,20 @@ class TelegramBot:
         )
         self.channel = channel
 
-    async def send(self, program: Program) -> None:
-        if program.icon:
+    async def send(self, text: str, icon: str = "") -> None:
+        if icon:
             await self.bot.send_photo(
                 chat_id=self.channel,
-                photo=URLInputFile(program.icon),
-                caption=self._format_program(program),
+                photo=URLInputFile(icon),
+                caption=text,
                 parse_mode="HTML",
             )
-            try:
-                await self.bot.send_photo(
-                    chat_id="-2135735087",
-                    photo=URLInputFile(program.icon),
-                    caption=self._format_program(program),
-                    parse_mode="HTML",
-                )
-            except:
-                ...
         else:
             await self.bot.send_message(
                 chat_id=self.channel,
-                text=self._format_program(program),
+                text=text,
                 parse_mode="HTML",
             )
-            try:
-                await self.bot.send_message(
-                    chat_id="-2135735087",
-                    text=self._format_program(program),
-                    parse_mode="HTML",
-                )
-            except:
-                ...
 
     def _format_program(self, program: Program) -> str:
         text = ""
