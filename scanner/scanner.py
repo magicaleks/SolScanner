@@ -225,7 +225,7 @@ class Scanner:
 
         bs = BeautifulSoup(driver.page_source, features="html.parser")
 
-        text = f"<a href=\"{solscan_link}\">Rugcheck.io</a> check:\n"
+        text += f"<a href=\"{solscan_link}\">Rugcheck.io</a> check:\n"
 
         main_d = bs.find("div", attrs={"class": "card-body"})
         total = main_d.find("h1")
@@ -233,7 +233,7 @@ class Scanner:
         text += f"<b>Total check:</b> {total.getText()}\n\n"
 
         row = main_d.find("div", attrs={"class": "row"})
-        for c, d in enumerate(row.find_all("div")[:8]):
+        for c, d in enumerate(row.find_all("div")[:6]):
             if c > 0:
                 text += " | "
             text += f"<b>{d.getText()}</b>"
