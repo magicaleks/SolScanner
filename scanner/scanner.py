@@ -233,7 +233,7 @@ class Scanner:
         text += f"<b>Total check:</b> {total.getText()}\n\n"
 
         row = main_d.find("div", attrs={"class": "row"})
-        for c, d in enumerate(row.find_all("div")):
+        for c, d in enumerate(row.find_all("div")[:8]):
             if c > 0:
                 text += " | "
             text += f"<b>{d.getText()}</b>"
